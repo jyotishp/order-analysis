@@ -1,5 +1,4 @@
 package main
-
 import (
 	"encoding/csv"
 	"encoding/json"
@@ -7,16 +6,19 @@ import (
 	"os"
 	"strconv"
 )
-
 type Order struct {
-	Id           int
-	CustomerId   int
-	RestaurantId int
-	Amount       float64
-	Status       string
-	DEId         int
-	Cart         string
+	OrderId int
+	Discount float64
+	Amount float64
 	PaymentMode  string
+	Rating int
+	Duration int
+	Cuisine string
+	OrderTime int
+	RestId int
+	State  string
+	CustId string
+
 }
 
 func ParseInt(txt string) int {
@@ -43,16 +45,27 @@ func HandleErr(err error, txt string) {
 	}
 }
 
+func Exists(name string) bool {
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
+}
+
 func (r *DataHandler) InitJsonWriter() {
 	var err error
-
-	err = os.Remove(r.JsonFilePath)
-	HandleErr(err, "Error removing exiting output file")
+	if Exists(r.JsonFilePath) {
+		err = os.Remove(r.JsonFilePath)
+		HandleErr(err, "Error removing exiting output file")
+	}
 
 	r.jsonFd, err = os.OpenFile(r.JsonFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	HandleErr(err, "Error opening JSON output file")
 
-	r.WriteLine("[")
+	r.WriteLine("{")
+	r.WriteLine("\"orders\": [")
 	HandleErr(err, "Error writing to JSON file")
 }
 
@@ -64,6 +77,7 @@ func (r *DataHandler) Init() {
 
 	r.InitJsonWriter()
 	firstRow, done := r.ReadLine()
+	firstRow, done = r.ReadLine()
 	if done {
 		log.Fatal("Got an empty CSV file")
 	}
@@ -93,27 +107,31 @@ func (r *DataHandler) WriteOrder(order Order) {
 }
 
 func (r *DataHandler) Close() {
-	r.WriteLine("]")
+	r.WriteLine("]\n}")
 	r.jsonFd.Close()
 	r.csvFd.Close()
 }
 
 func (r *DataHandler) CreateOrder(data []string) Order {
 	order := Order{
-		Id:           ParseInt(data[0]),
-		CustomerId:   ParseInt(data[1]),
-		RestaurantId: ParseInt(data[2]),
-		Amount:       ParseFloat(data[3]),
-		Status:       data[4],
-		DEId:         ParseInt(data[5]),
-		Cart:         data[6],
-		PaymentMode:  data[7],
+		OrderId:    ParseInt(data[0]),
+		Discount:   ParseFloat(data[1]),
+		Amount:     ParseFloat(data[2]),
+		PaymentMode:data[3],
+		Rating:     ParseInt(data[4]),
+		Duration:   ParseInt(data[5]),
+		Cuisine:    data[6],
+		OrderTime:  ParseInt(data[7]),
+		RestId:     ParseInt(data[8]),
+		State:      data[9],
+		CustId:     data[10],
+
 	}
 	return order
 }
 
 func main() {
-	csvFilePath := "MOCK_DATA.csv"
+	csvFilePath := "sample_data.csv"
 	jsonFilePath := "outputs.json"
 	dh := DataHandler{CsvFilePath: csvFilePath, JsonFilePath: jsonFilePath}
 	dh.Init()
