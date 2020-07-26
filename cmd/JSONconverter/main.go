@@ -1,10 +1,10 @@
 package main
 
 import (
-	"pkg/ErrorHandlers"
-	"pkg/Models"
 	"encoding/csv"
 	"encoding/json"
+	"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
+	"github.com/jyotishp/order-analysis/pkg/Models"
 	"log"
 	"os"
 )
@@ -124,8 +124,8 @@ func (r *DataHandler) CreateOrder(data []string) Models.Order {
 }
 
 func main() {
-	csvFilePath := "../files/sample_data_2.csv"
-	jsonFilePath := "../files/outputs.json"
+	csvFilePath := "sample_data_2.csv"
+	jsonFilePath := "outputs.json"
 	dh := DataHandler{CsvFilePath: csvFilePath, JsonFilePath: jsonFilePath}
 	dh.Init()
 	defer dh.Close()
