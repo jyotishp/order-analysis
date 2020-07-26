@@ -25,6 +25,12 @@ The following results are generated using the JSON file:
     - state/all(GET): Shows cuisine wise number of orders for each state.
     - state/top/{state}/{num}(GET): Show top num cuisines of given state with respect to number of orders made.
     
+3. Add orders :
+    
+    API:
+    
+    - order/add(POST): Adds an order and also gives error if order of that order ID already there.
+    
 Added basic authentication to all APIs.
 
 ### Instructions:
