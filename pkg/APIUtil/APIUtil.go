@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
 	"github.com/jyotishp/order-analysis/pkg/Models"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"sort"
@@ -154,7 +155,11 @@ func CheckError(err error, c *gin.Context)  {
 func AddOrder(c *gin.Context){
 	user := c.MustGet(gin.AuthUserKey).(string)
 	if _, ok := AuthUtil.Secrets[user]; ok {
+	body:=c.Request.Body
+	content, _:= ioutil.ReadAll(body)
+	fmt.Println(content)
 	Id:=c.Query("Id")
+	fmt.Println(Id)
 	if Orders[Id] == 1{
 		c.JSON(200,gin.H{
 			"Error":"Order Id already present",
