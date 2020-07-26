@@ -1,11 +1,8 @@
 package main
 
 import (
-	"encoding/csv"
-	"encoding/json"
-	"github.com/jyotishp/order-analysis/pkg/WriteUtil"
+	"github.com/jyotishp/order-analysis/pkg/FileUtil"
 	"log"
-	"os"
 )
 
 
@@ -15,7 +12,7 @@ import (
 func main() {
 	csvFilePath := "sample_data_2.csv"
 	jsonFilePath := "outputs.json"
-	dh := DataHandler{CsvFilePath: csvFilePath, JsonFilePath: jsonFilePath}
+	dh := FileUtil.DataHandler{CsvFilePath: csvFilePath, JsonFilePath: jsonFilePath}
 	dh.Init()
 	defer dh.Close()
 	for {
