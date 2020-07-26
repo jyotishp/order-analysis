@@ -7,22 +7,16 @@ import (
 	"log"
 	"os"
 	"github.com/jyotishp/order-analysis/pkg/APIUtil"
+	"github.com/jyotishp/order-analysis/pkg/AuthUtil"
 )
 
 
 func main() {
 	router := gin.Default()
 
-	accounts := gin.Accounts{
-		"shubham": "das",
-		"austin":  "1234",
-		"lena":    "hello2",
-		"manu":    "4321",
-	}
-
-	restaurantAPI := router.Group("/restaurant", gin.BasicAuth(accounts))
-	cuisineAPI := router.Group("/cuisine", gin.BasicAuth(accounts))
-	stateCuisineAPI := router.Group("/state", gin.BasicAuth(accounts))
+	restaurantAPI := router.Group("/restaurant", gin.BasicAuth(AuthUtil.Accounts))
+	cuisineAPI := router.Group("/cuisine", gin.BasicAuth(AuthUtil.Accounts))
+	stateCuisineAPI := router.Group("/state", gin.BasicAuth(AuthUtil.Accounts))
 
 	//restaurantAPI:=router.Group("/restaurant")
 	restaurantAPI.GET("/all", APIUtil.GetAllRestaurants)
