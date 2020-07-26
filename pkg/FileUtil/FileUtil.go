@@ -1,4 +1,4 @@
-package WriteUtil
+package FileUtil
 
 import (
 	"encoding/csv"
