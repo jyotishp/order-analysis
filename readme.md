@@ -29,6 +29,10 @@ Added basic authentication to all APIs.
 
 ### Instructions:
 
+External libraries used:
+
+"github.com/gin-gonic/gin" and "github.com/tamerh/jsparser" add them using go get -u command.
+
 Sample csv file is available at https://github.com/jyotishp/order-analysis/releases/download/v2/sample_data_2.csv.zip
 
 Download it and place it inside JSONConverter directory.
