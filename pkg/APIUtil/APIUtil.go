@@ -158,6 +158,10 @@ func AddOrder(c *gin.Context){
 	body:=c.Request.Body
 	content, _:= ioutil.ReadAll(body)
 	fmt.Println(content)
+	var orderData2 Models.Order
+	err := json.Unmarshal([]byte(content), &orderData2)
+	CheckError(err,c)
+	fmt.Println(orderData2)
 	Id:=c.Query("Id")
 	fmt.Println(Id)
 	if Orders[Id] == 1{
