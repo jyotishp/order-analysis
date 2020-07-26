@@ -15,50 +15,18 @@ var restaurant_count = make(map[string]int)
 var cuisine_count = make(map[string]int)
 var state_cuisine_count = make(map[string]map[string]int)
 
+
 var secrets = gin.H{
 	"shubham": gin.H{"email": "shubham.das2@swiggy.in", "phone": "7980365829"},
 	"austin":  gin.H{"email": "austin@example.com", "phone": "666"},
 	"lena":    gin.H{"email": "lena@guapa.com", "phone": "523443"},
 }
 
-func getTopNumRestaurants(c *gin.Context) {
-
-	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := secrets[user]; ok {
-		num := c.Param("num")
-		type kv struct {
-			Key   string
-			Value int
-		}
-
-		var ss []kv
-		for k, v := range restaurant_count {
-			ss = append(ss, kv{k, v})
-		}
-
-		sort.Slice(ss, func(i, j int) bool {
-			return ss[i].Value > ss[j].Value
-		})
-
-		numint, err := strconv.Atoi(num)
-		if err == nil {
-			if numint > len(ss) {
-				numint = len(ss)
-			}
-			if numint >= 0 {
-				c.JSON(200, ss[:numint])
-			} else {
-				numint = len(ss) + numint
-				if numint < 0 {
-					numint = 0
-				}
-				c.JSON(200, ss[numint:])
-			}
-		}
-	} else {
-		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-	}
+type kv struct {
+	Key   string
+	Value int
 }
+
 
 func getAllRestaurants(c *gin.Context) {
 
@@ -91,6 +59,48 @@ func getAllStatesCuisines(c *gin.Context) {
 	}
 }
 
+func keySort(count map[string] int, num string) []kv{
+	var ss []kv
+	for k, v := range count {
+		ss = append(ss, kv{k, v})
+	}
+
+	sort.Slice(ss, func(i, j int) bool {
+		return ss[i].Value > ss[j].Value
+	})
+
+	numint, err := strconv.Atoi(num)
+	if err == nil {
+		if numint > len(ss) {
+			numint = len(ss)
+		}
+		if numint >= 0 {
+			 return ss[:numint]
+		} else {
+			numint = len(ss) + numint
+			if numint < 0 {
+				numint = 0
+			}
+			return ss[numint:]
+		}
+	}
+	return nil
+}
+
+func getTopNumRestaurants(c *gin.Context) {
+
+	user := c.MustGet(gin.AuthUserKey).(string)
+	if _, ok := secrets[user]; ok {
+		num := c.Param("num")
+		jsonSlice:= keySort(restaurant_count, num)
+		c.JSON(200,jsonSlice)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
+	}
+}
+
+
+
 func getTopNumStatesCuisines(c *gin.Context) {
 
 	user := c.MustGet(gin.AuthUserKey).(string)
@@ -98,35 +108,8 @@ func getTopNumStatesCuisines(c *gin.Context) {
 
 		num := c.Param("num")
 		state := c.Param("state")
-		type kv struct {
-			Key   string
-			Value int
-		}
-
-		var ss []kv
-		for k, v := range state_cuisine_count[state] {
-			ss = append(ss, kv{k, v})
-		}
-
-		sort.Slice(ss, func(i, j int) bool {
-			return ss[i].Value > ss[j].Value
-		})
-
-		numint, err := strconv.Atoi(num)
-		if err == nil {
-			if numint > len(ss) {
-				numint = len(ss)
-			}
-			if numint >= 0 {
-				c.JSON(200, ss[:numint])
-			} else {
-				numint = len(ss) + numint
-				if numint < 0 {
-					numint = 0
-				}
-				c.JSON(200, ss[numint:])
-			}
-		}
+		jsonSlice:= keySort(state_cuisine_count[state], num)
+		c.JSON(200,jsonSlice)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
 	}
@@ -137,35 +120,8 @@ func getTopNumCuisines(c *gin.Context) {
 	user := c.MustGet(gin.AuthUserKey).(string)
 	if _, ok := secrets[user]; ok {
 		num := c.Param("num")
-		type kv struct {
-			Key   string
-			Value int
-		}
-
-		var ss []kv
-		for k, v := range cuisine_count {
-			ss = append(ss, kv{k, v})
-		}
-
-		sort.Slice(ss, func(i, j int) bool {
-			return ss[i].Value > ss[j].Value
-		})
-
-		numint, err := strconv.Atoi(num)
-		if err == nil {
-			if numint > len(ss) {
-				numint = len(ss)
-			}
-			if numint >= 0 {
-				c.JSON(200, ss[:numint])
-			} else {
-				numint = len(ss) + numint
-				if numint < 0 {
-					numint = 0
-				}
-				c.JSON(200, ss[numint:])
-			}
-		}
+		jsonSlice:= keySort(cuisine_count, num)
+		c.JSON(200,jsonSlice)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
 	}
