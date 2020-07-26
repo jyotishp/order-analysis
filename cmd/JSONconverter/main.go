@@ -5,10 +5,6 @@ import (
 	"log"
 )
 
-
-
-
-
 func main() {
 	csvFilePath := "sample_data_2.csv"
 	jsonFilePath := "outputs.json"

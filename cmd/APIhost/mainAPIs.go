@@ -7,26 +7,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"sort"
-	"strconv"
 )
 
 var restaurant_count = make(map[string]int)
 var cuisine_count = make(map[string]int)
 var state_cuisine_count = make(map[string]map[string]int)
-
-
-var secrets = gin.H{
-	"shubham": gin.H{"email": "shubham.das2@swiggy.in", "phone": "7980365829"},
-	"austin":  gin.H{"email": "austin@example.com", "phone": "666"},
-	"lena":    gin.H{"email": "lena@guapa.com", "phone": "523443"},
-}
-
-type kv struct {
-	Key   string
-	Value int
-}
-
 
 func getAllRestaurants(c *gin.Context) {
 
@@ -59,33 +44,6 @@ func getAllStatesCuisines(c *gin.Context) {
 	}
 }
 
-func keySort(count map[string] int, num string) []kv{
-	var ss []kv
-	for k, v := range count {
-		ss = append(ss, kv{k, v})
-	}
-
-	sort.Slice(ss, func(i, j int) bool {
-		return ss[i].Value > ss[j].Value
-	})
-
-	numint, err := strconv.Atoi(num)
-	if err == nil {
-		if numint > len(ss) {
-			numint = len(ss)
-		}
-		if numint >= 0 {
-			 return ss[:numint]
-		} else {
-			numint = len(ss) + numint
-			if numint < 0 {
-				numint = 0
-			}
-			return ss[numint:]
-		}
-	}
-	return nil
-}
 
 func getTopNumRestaurants(c *gin.Context) {
 
