@@ -5,86 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tamerh/jsparser"
 	"log"
-	"net/http"
 	"os"
 	"github.com/jyotishp/order-analysis/pkg/APIUtil"
 )
 
-var restaurant_count = make(map[string]int)
-var cuisine_count = make(map[string]int)
-var state_cuisine_count = make(map[string]map[string]int)
-
-func getAllRestaurants(c *gin.Context) {
-
-	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := APIUtil.Secrets[user]; ok {
-		c.JSON(200, restaurant_count)
-	} else {
-		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-	}
-
-}
-
-func getAllCusines(c *gin.Context) {
-
-	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := APIUtil.Secrets[user]; ok {
-		c.JSON(200, cuisine_count)
-	} else {
-		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-	}
-}
-
-func getAllStatesCuisines(c *gin.Context) {
-
-	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := APIUtil.Secrets[user]; ok {
-		c.JSON(200, state_cuisine_count)
-	} else {
-		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-	}
-}
-
-
-func getTopNumRestaurants(c *gin.Context) {
-
-	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := APIUtil.Secrets[user]; ok {
-		num := c.Param("num")
-		jsonSlice:= APIUtil.KeySort(restaurant_count, num)
-		c.JSON(200,jsonSlice)
-	} else {
-		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-	}
-}
-
-
-
-func getTopNumStatesCuisines(c *gin.Context) {
-
-	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := APIUtil.Secrets[user]; ok {
-
-		num := c.Param("num")
-		state := c.Param("state")
-		jsonSlice:= APIUtil.KeySort(state_cuisine_count[state], num)
-		c.JSON(200,jsonSlice)
-	} else {
-		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-	}
-}
-
-func getTopNumCuisines(c *gin.Context) {
-
-	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := APIUtil.Secrets[user]; ok {
-		num := c.Param("num")
-		jsonSlice:= APIUtil.KeySort(cuisine_count, num)
-		c.JSON(200,jsonSlice)
-	} else {
-		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-	}
-}
 
 func main() {
 	router := gin.Default()
@@ -101,16 +25,16 @@ func main() {
 	stateCuisineAPI := router.Group("/state", gin.BasicAuth(accounts))
 
 	//restaurantAPI:=router.Group("/restaurant")
-	restaurantAPI.GET("/all", getAllRestaurants)
-	restaurantAPI.GET("/top/:num", getTopNumRestaurants)
+	restaurantAPI.GET("/all", APIUtil.GetAllRestaurants)
+	restaurantAPI.GET("/top/:num", APIUtil.GetTopNumRestaurants)
 
 	//cuisineAPI:=router.Group("/cuisine")
-	cuisineAPI.GET("/all", getAllCusines)
-	cuisineAPI.GET("/top/:num", getTopNumCuisines)
+	cuisineAPI.GET("/all", APIUtil.GetAllCusines)
+	cuisineAPI.GET("/top/:num", APIUtil.GetTopNumCuisines)
 
 	//stateCuisineAPI:=router.Group("/state")
-	stateCuisineAPI.GET("/all", getAllStatesCuisines)
-	stateCuisineAPI.GET("/top/:state/:num", getTopNumStatesCuisines)
+	stateCuisineAPI.GET("/all", APIUtil.GetAllStatesCuisines)
+	stateCuisineAPI.GET("/top/:state/:num", APIUtil.GetTopNumStatesCuisines)
 
 	r, _ := os.Open("outputs.json")
 	br := bufio.NewReaderSize(r, 65536)
@@ -125,14 +49,14 @@ func main() {
 		cuisine := json.ObjectVals["Cuisine"]
 		state := json.ObjectVals["State"]
 
-		restaurant_count[restaurant.(string)]++
-		cuisine_count[cuisine.(string)]++
-		statemap, ok := state_cuisine_count[state.(string)]
+		APIUtil.Restaurant_count[restaurant.(string)]++
+		APIUtil.Cuisine_count[cuisine.(string)]++
+		statemap, ok := APIUtil.State_cuisine_count[state.(string)]
 		if ok {
 			statemap[cuisine.(string)]++
 		} else {
-			state_cuisine_count[state.(string)] = make(map[string]int)
-			state_cuisine_count[state.(string)][cuisine.(string)]++
+			APIUtil.State_cuisine_count[state.(string)] = make(map[string]int)
+			APIUtil.State_cuisine_count[state.(string)][cuisine.(string)]++
 		}
 	}
 	router.Run(":5665")
