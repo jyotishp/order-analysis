@@ -143,6 +143,14 @@ func GetTopNumCuisines(c *gin.Context) {
 	}
 }
 
+func CheckError(err error, c *gin.Context)  {
+	if err != nil {
+		c.JSON(200,gin.H{
+			"error":err.Error(),
+		})
+	}
+}
+
 func AddOrder(c *gin.Context){
 	user := c.MustGet(gin.AuthUserKey).(string)
 	if _, ok := AuthUtil.Secrets[user]; ok {
@@ -181,10 +189,10 @@ func AddOrder(c *gin.Context){
 		}
 		f, err := os.OpenFile("outputs.json", os.O_RDWR, os.ModePerm)
 		defer f.Close()
-		ErrorHandlers.checkError(err,c)
+		CheckError(err,c)
 
 		orderJson, err := json.Marshal(newOrder)
-		ErrorHandlers.checkError(err,c)
+		CheckError(err,c)
 
 		orderString := string(orderJson)
 		orderString = "," + orderString
@@ -196,11 +204,11 @@ func AddOrder(c *gin.Context){
 
 		tmp := []byte(orderString)
 		_, err = f.WriteAt(tmp, start)
-		ErrorHandlers.checkError(err, c)
+		CheckError(err, c)
 
 		str := []byte("]}")
 		_, err = f.WriteAt(str, start + int64(len(orderString)))
-		ErrorHandlers.checkError(err, c)
+		CheckError(err, c)
 		c.JSON(200,gin.H{
 			"success":"order successfully added",
 		})
