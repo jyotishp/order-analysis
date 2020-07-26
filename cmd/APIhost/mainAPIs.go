@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"github.com/jyotishp/order-analysis/pkg/APIUtil"
 )
 
 var restaurant_count = make(map[string]int)
@@ -16,7 +17,7 @@ var state_cuisine_count = make(map[string]map[string]int)
 func getAllRestaurants(c *gin.Context) {
 
 	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := secrets[user]; ok {
+	if _, ok := APIUtil.Secrets[user]; ok {
 		c.JSON(200, restaurant_count)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
@@ -27,7 +28,7 @@ func getAllRestaurants(c *gin.Context) {
 func getAllCusines(c *gin.Context) {
 
 	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := secrets[user]; ok {
+	if _, ok := APIUtil.Secrets[user]; ok {
 		c.JSON(200, cuisine_count)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
@@ -37,7 +38,7 @@ func getAllCusines(c *gin.Context) {
 func getAllStatesCuisines(c *gin.Context) {
 
 	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := secrets[user]; ok {
+	if _, ok := APIUtil.Secrets[user]; ok {
 		c.JSON(200, state_cuisine_count)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
@@ -48,9 +49,9 @@ func getAllStatesCuisines(c *gin.Context) {
 func getTopNumRestaurants(c *gin.Context) {
 
 	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := secrets[user]; ok {
+	if _, ok := APIUtil.Secrets[user]; ok {
 		num := c.Param("num")
-		jsonSlice:= keySort(restaurant_count, num)
+		jsonSlice:= APIUtil.KeySort(restaurant_count, num)
 		c.JSON(200,jsonSlice)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
@@ -62,11 +63,11 @@ func getTopNumRestaurants(c *gin.Context) {
 func getTopNumStatesCuisines(c *gin.Context) {
 
 	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := secrets[user]; ok {
+	if _, ok := APIUtil.Secrets[user]; ok {
 
 		num := c.Param("num")
 		state := c.Param("state")
-		jsonSlice:= keySort(state_cuisine_count[state], num)
+		jsonSlice:= APIUtil.KeySort(state_cuisine_count[state], num)
 		c.JSON(200,jsonSlice)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
@@ -76,9 +77,9 @@ func getTopNumStatesCuisines(c *gin.Context) {
 func getTopNumCuisines(c *gin.Context) {
 
 	user := c.MustGet(gin.AuthUserKey).(string)
-	if _, ok := secrets[user]; ok {
+	if _, ok := APIUtil.Secrets[user]; ok {
 		num := c.Param("num")
-		jsonSlice:= keySort(cuisine_count, num)
+		jsonSlice:= APIUtil.KeySort(cuisine_count, num)
 		c.JSON(200,jsonSlice)
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})

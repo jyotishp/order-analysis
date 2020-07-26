@@ -6,21 +6,21 @@ import (
 	"strconv"
 )
 
-var secrets = gin.H{
+var Secrets = gin.H{
 	"shubham": gin.H{"email": "shubham.das2@swiggy.in", "phone": "7980365829"},
 	"austin":  gin.H{"email": "austin@example.com", "phone": "666"},
 	"lena":    gin.H{"email": "lena@guapa.com", "phone": "523443"},
 }
 
-type kv struct {
+type KV struct {
 	Key   string
 	Value int
 }
 
-func keySort(count map[string] int, num string) []kv{
-	var ss []kv
+func KeySort(count map[string] int, num string) []KV{
+	var ss []KV
 	for k, v := range count {
-		ss = append(ss, kv{k, v})
+		ss = append(ss, KV{k, v})
 	}
 
 	sort.Slice(ss, func(i, j int) bool {
