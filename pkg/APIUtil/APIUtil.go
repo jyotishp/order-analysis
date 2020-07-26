@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/jyotishp/order-analysis/pkg/APIUtil"
-
 	//"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
 	"github.com/jyotishp/order-analysis/pkg/Models"
 	"io/ioutil"
@@ -203,8 +201,8 @@ func AddOrder(c *gin.Context){
 	if ok {
 		statemap[cuisine]++
 	} else {
-		APIUtil.State_cuisine_count[state] = make(map[string]int)
-		APIUtil.State_cuisine_count[state][cuisine]++
+		State_cuisine_count[state] = make(map[string]int)
+		State_cuisine_count[state][cuisine]++
 	}
 
 	c.JSON(200,gin.H{
