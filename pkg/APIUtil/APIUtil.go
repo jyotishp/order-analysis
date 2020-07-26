@@ -165,6 +165,7 @@ func AddOrder(c *gin.Context){
 		c.JSON(200, gin.H{
 			"Error":"Order ID already there",
 		})
+		return
 	}
 
 	f, err := os.OpenFile("outputs.json", os.O_RDWR, os.ModePerm)
