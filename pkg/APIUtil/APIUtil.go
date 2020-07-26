@@ -158,70 +158,43 @@ func AddOrder(c *gin.Context){
 	body:=c.Request.Body
 	content, _:= ioutil.ReadAll(body)
 	fmt.Println(content)
-	var orderData2 Models.Order
-	err := json.Unmarshal([]byte(content), &orderData2)
+	var orderData Models.Order
+	err := json.Unmarshal([]byte(content), &orderData)
 	CheckError(err,c)
-	fmt.Println(orderData2)
-	Id:=c.Query("Id")
-	fmt.Println(Id)
-	if Orders[Id] == 1{
-		c.JSON(200,gin.H{
-			"Error":"Order Id already present",
-		})
-	}else {
-		Discount := c.Query("Discount")
-		Amount := c.Query("Amount")
-		PaymentMode := c.Query("PaymentMode")
-		Rating := c.Query("Rating")
-		Duration := c.Query("Duration")
-		Cuisine := c.Query("Cuisine")
-		Time := c.Query("Time")
-		CustId := c.Query("CustId")
-		CustName := c.Query("CustName")
-		RestId := c.Query("RestId")
-		RestName := c.Query("RestName")
-		State := c.Query("State")
-		newOrder := Models.Order{
-			ErrorHandlers.ParseInt(Id),
-			ErrorHandlers.ParseFloat(Discount),
-			ErrorHandlers.ParseFloat(Amount),
-			PaymentMode,
-			ErrorHandlers.ParseInt(Rating),
-			ErrorHandlers.ParseInt(Duration),
-			Cuisine,
-			ErrorHandlers.ParseInt(Time),
-			ErrorHandlers.ParseInt(CustId),
-			CustName,
-			ErrorHandlers.ParseInt(RestId),
-			RestName,
-			State,
-		}
-		f, err := os.OpenFile("outputs.json", os.O_RDWR, os.ModePerm)
-		defer f.Close()
-		CheckError(err,c)
-
-		orderJson, err := json.Marshal(newOrder)
-		CheckError(err,c)
-
-		orderString := string(orderJson)
-		orderString = "," + orderString
-
-		off := int64(2)
-		stat, err := os.Stat("outputs.json")
-		fmt.Println("Size : ", stat.Size())
-		start := stat.Size() - off
-
-		tmp := []byte(orderString)
-		_, err = f.WriteAt(tmp, start)
-		CheckError(err, c)
-
-		str := []byte("]}")
-		_, err = f.WriteAt(str, start + int64(len(orderString)))
-		CheckError(err, c)
-		c.JSON(200,gin.H{
-			"success":"order successfully added",
+	fmt.Println(orderData)
+	Id := orderData.Id
+	if Orders[string(Id)] == 1{
+		c.JSON(200, gin.H{
+			"Error":"Order ID already there",
 		})
 	}
+
+	f, err := os.OpenFile("outputs.json", os.O_RDWR, os.ModePerm)
+	defer f.Close()
+	CheckError(err,c)
+
+	orderJson, err := json.Marshal(orderData)
+	CheckError(err,c)
+
+	orderString := string(orderJson)
+	orderString = "," + orderString
+
+	off := int64(2)
+	stat, err := os.Stat("outputs.json")
+	fmt.Println("Size : ", stat.Size())
+	start := stat.Size() - off
+
+	tmp := []byte(orderString)
+	_, err = f.WriteAt(tmp, start)
+	CheckError(err, c)
+
+	str := []byte("]}")
+	_, err = f.WriteAt(str, start + int64(len(orderString)))
+	CheckError(err, c)
+	c.JSON(200,gin.H{
+		"success":"order successfully added",
+	})
+
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
 	}
