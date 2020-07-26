@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jyotishp/order-analysis/pkg/APIUtil"
+
 	//"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
 	"github.com/jyotishp/order-analysis/pkg/Models"
 	"io/ioutil"
@@ -157,13 +159,11 @@ func AddOrder(c *gin.Context){
 	if _, ok := AuthUtil.Secrets[user]; ok {
 	body:=c.Request.Body
 	content, _:= ioutil.ReadAll(body)
-	fmt.Println(content)
 	var orderData Models.Order
 	err := json.Unmarshal([]byte(content), &orderData)
 	CheckError(err,c)
-	fmt.Println(orderData)
 	Id := orderData.Id
-	if Orders[string(Id)] == 1{
+	if Orders[string(Id)] >= 1{
 		c.JSON(200, gin.H{
 			"Error":"Order ID already there",
 		})
@@ -191,6 +191,22 @@ func AddOrder(c *gin.Context){
 	str := []byte("]}")
 	_, err = f.WriteAt(str, start + int64(len(orderString)))
 	CheckError(err, c)
+
+	restaurant := orderData.RestName
+	cuisine := orderData.Cuisine
+	state := orderData.State
+
+	Restaurant_count[restaurant]++
+	Cuisine_count[cuisine]++
+	Orders[string(Id)]++
+	statemap, ok := State_cuisine_count[state]
+	if ok {
+		statemap[cuisine]++
+	} else {
+		APIUtil.State_cuisine_count[state] = make(map[string]int)
+		APIUtil.State_cuisine_count[state][cuisine]++
+	}
+
 	c.JSON(200,gin.H{
 		"success":"order successfully added",
 	})
