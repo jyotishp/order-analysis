@@ -3,8 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"encoding/json"
-	"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
-	"github.com/jyotishp/order-analysis/pkg/Models"
+	"github.com/jyotishp/order-analysis/pkg/WriteUtil"
 	"log"
 	"os"
 )

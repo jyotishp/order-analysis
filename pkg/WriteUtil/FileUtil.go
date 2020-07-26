@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"github.com/jyotishp/order-analysis/pkg/Models"
-	 e "github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
+	"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
 	"log"
 	"os"
 )
@@ -23,22 +23,22 @@ type DataHandler struct {
 
 func (r *DataHandler) InitJsonWriter() {
 	var err error
-	if e.Exists(r.JsonFilePath) {
+	if ErrorHandlers.Exists(r.JsonFilePath) {
 		err = os.Remove(r.JsonFilePath)
-		e.HandleErr(err, "Error removing exiting output file")
+		HandleErr(err, "Error removing exiting output file")
 	}
 
 	r.jsonFd, err = os.OpenFile(r.JsonFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	e.HandleErr(err, "Error opening JSON output file")
+	HandleErr(err, "Error opening JSON output file")
 
 	r.WriteLine("{\"orders\": [")
-	e.HandleErr(err, "Error writing to JSON file")
+	HandleErr(err, "Error writing to JSON file")
 }
 
 func (r *DataHandler) Init() {
 	var err error
 	r.csvFd, err = os.Open(r.CsvFilePath)
-	e.HandleErr(err, "Error reading the CSV file")
+	HandleErr(err, "Error reading the CSV file")
 	r.csvReader = csv.NewReader(r.csvFd)
 
 	r.InitJsonWriter()
@@ -57,13 +57,13 @@ func (r *DataHandler) ReadLine() ([]string, bool) {
 	if data == nil {
 		return nil, true
 	}
-	e.HandleErr(err, "Error reading from CSV file")
+	HandleErr(err, "Error reading from CSV file")
 	return data, false
 }
 
 func (r *DataHandler) WriteLine(txt string) {
 	_, err := r.jsonFd.WriteString(txt)
-	e.HandleErr(err, "Error writing to JSON file")
+	HandleErr(err, "Error writing to JSON file")
 }
 
 func (r *DataHandler) WriteOrder(order Models.Order) {
