@@ -1,6 +1,7 @@
 package ErrorHandlers
 
 import (
+	"github.com/gin-gonic/gin"
 	"log"
 	"os"
 	"strconv"
@@ -43,4 +44,12 @@ func Exists(name string) bool {
 		}
 	}
 	return true
+}
+
+func checkError(err error, c *gin.Context)  {
+	if err != nil {
+		c.JSON(200,gin.H{
+			"error":err.Error(),
+		})
+	}
 }

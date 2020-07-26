@@ -14,6 +14,7 @@ func addAPIPaths(router *gin.Engine){
 	restaurantAPI := router.Group("/restaurant", gin.BasicAuth(AuthUtil.Accounts))
 	cuisineAPI := router.Group("/cuisine", gin.BasicAuth(AuthUtil.Accounts))
 	stateCuisineAPI := router.Group("/state", gin.BasicAuth(AuthUtil.Accounts))
+	orderAPI := router.Group("/order", gin.BasicAuth(AuthUtil.Accounts))
 
 	//restaurantAPI:=router.Group("/restaurant")
 	restaurantAPI.GET("/all", APIUtil.GetAllRestaurants)
@@ -26,6 +27,8 @@ func addAPIPaths(router *gin.Engine){
 	//stateCuisineAPI:=router.Group("/state")
 	stateCuisineAPI.GET("/all", APIUtil.GetAllStatesCuisines)
 	stateCuisineAPI.GET("/top/:state/:num", APIUtil.GetTopNumStatesCuisines)
+
+	orderAPI.POST("/add",APIUtil.AddOrder)
 }
 
 func main() {
@@ -45,9 +48,11 @@ func main() {
 		restaurant := json.ObjectVals["RestName"]
 		cuisine := json.ObjectVals["Cuisine"]
 		state := json.ObjectVals["State"]
+		id := json.ObjectVals["Id"]
 
 		APIUtil.Restaurant_count[restaurant.(string)]++
 		APIUtil.Cuisine_count[cuisine.(string)]++
+		APIUtil.Orders[id.(string)]++
 		statemap, ok := APIUtil.State_cuisine_count[state.(string)]
 		if ok {
 			statemap[cuisine.(string)]++
