@@ -2,6 +2,7 @@ package ErrorHandlers
 
 import (
 	"log"
+	"os"
 	"strconv"
 )
 
@@ -27,4 +28,19 @@ func InfoErr(err error, txt string) {
 	if err != nil {
 		log.Printf("%v - %v", txt, err.Error())
 	}
+}
+
+func HandleErr(err error, txt string) {
+	if err != nil {
+		log.Fatal(txt, err.Error())
+	}
+}
+
+func Exists(name string) bool {
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
 }
