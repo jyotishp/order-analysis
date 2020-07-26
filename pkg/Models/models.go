@@ -1,4 +1,4 @@
-package main
+package Models
 
 type Order struct {
 	Id          int

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"pkg/ErrorHandlers"
+	"pkg/Models"
 	"encoding/csv"
 	"encoding/json"
 	"log"
@@ -79,7 +81,7 @@ func (r *DataHandler) WriteLine(txt string) {
 	HandleErr(err, "Error writing to JSON file")
 }
 
-func (r *DataHandler) WriteOrder(order Order) {
+func (r *DataHandler) WriteOrder(order Models.Order) {
 	orderJson, _ := json.Marshal(order)
 	r.jsonFd.WriteString(",")
 	r.jsonFd.WriteString(string(orderJson))
@@ -91,23 +93,23 @@ func (r *DataHandler) Close() {
 	r.csvFd.Close()
 }
 
-func (r *DataHandler) CreateOrder(data []string) Order {
-	custId := ParseInt(data[11])
+func (r *DataHandler) CreateOrder(data []string) Models.Order {
+	custId := ErrorHandlers.ParseInt(data[11])
 	custName := data[12]
-	restId := ParseInt(data[8])
+	restId := ErrorHandlers.ParseInt(data[8])
 	restName := data[9]
 	state := data[10]
 	cuisine := data[6]
 
-	order := Order{
-		Id:          ParseInt(data[0]),
-		Discount:    ParseFloat(data[1]),
-		Amount:      ParseFloat(data[2]),
+	order := Models.Order{
+		Id:          ErrorHandlers.ParseInt(data[0]),
+		Discount:    ErrorHandlers.ParseFloat(data[1]),
+		Amount:      ErrorHandlers.ParseFloat(data[2]),
 		PaymentMode: data[3],
-		Rating:      ParseInt(data[4]),
-		Duration:    ParseInt(data[5]),
+		Rating:      ErrorHandlers.ParseInt(data[4]),
+		Duration:    ErrorHandlers.ParseInt(data[5]),
 		Cuisine:     cuisine,
-		Time:        ParseInt(data[7]),
+		Time:        ErrorHandlers.ParseInt(data[7]),
 		RestId:      restId,
 		RestName:    restName,
 		State:       state,
@@ -122,8 +124,8 @@ func (r *DataHandler) CreateOrder(data []string) Order {
 }
 
 func main() {
-	csvFilePath := "sample_data_2.csv"
-	jsonFilePath := "outputs.json"
+	csvFilePath := "../files/sample_data_2.csv"
+	jsonFilePath := "../files/outputs.json"
 	dh := DataHandler{CsvFilePath: csvFilePath, JsonFilePath: jsonFilePath}
 	dh.Init()
 	defer dh.Close()
