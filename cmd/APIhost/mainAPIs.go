@@ -10,10 +10,7 @@ import (
 	"github.com/jyotishp/order-analysis/pkg/AuthUtil"
 )
 
-
-func main() {
-	router := gin.Default()
-
+func addAPIPaths(router *gin.Engine){
 	restaurantAPI := router.Group("/restaurant", gin.BasicAuth(AuthUtil.Accounts))
 	cuisineAPI := router.Group("/cuisine", gin.BasicAuth(AuthUtil.Accounts))
 	stateCuisineAPI := router.Group("/state", gin.BasicAuth(AuthUtil.Accounts))
@@ -29,6 +26,12 @@ func main() {
 	//stateCuisineAPI:=router.Group("/state")
 	stateCuisineAPI.GET("/all", APIUtil.GetAllStatesCuisines)
 	stateCuisineAPI.GET("/top/:state/:num", APIUtil.GetTopNumStatesCuisines)
+}
+
+func main() {
+	router := gin.Default()
+
+	addAPIPaths(router)
 
 	r, _ := os.Open("outputs.json")
 	br := bufio.NewReaderSize(r, 65536)

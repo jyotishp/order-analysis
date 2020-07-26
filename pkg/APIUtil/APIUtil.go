@@ -85,7 +85,13 @@ func GetTopNumRestaurants(c *gin.Context) {
 	if _, ok := AuthUtil.Secrets[user]; ok {
 		num := c.Param("num")
 		jsonSlice:= KeySort(Restaurant_count, num)
-		c.JSON(200,jsonSlice)
+		if jsonSlice == nil{
+			c.JSON(200,gin.H{
+				"Error":"Provide valid integer value.",
+			})
+		} else {
+			c.JSON(200, jsonSlice)
+		}
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
 	}
@@ -101,7 +107,13 @@ func GetTopNumStatesCuisines(c *gin.Context) {
 		num := c.Param("num")
 		state := c.Param("state")
 		jsonSlice:= KeySort(State_cuisine_count[state], num)
-		c.JSON(200,jsonSlice)
+		if jsonSlice == nil{
+			c.JSON(200,gin.H{
+				"Error":"Provide valid integer value.",
+			})
+		} else {
+			c.JSON(200, jsonSlice)
+		}
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
 	}
@@ -113,7 +125,13 @@ func GetTopNumCuisines(c *gin.Context) {
 	if _, ok := AuthUtil.Secrets[user]; ok {
 		num := c.Param("num")
 		jsonSlice:= KeySort(Cuisine_count, num)
-		c.JSON(200,jsonSlice)
+		if jsonSlice == nil{
+			c.JSON(200,gin.H{
+				"Error":"Provide valid integer value.",
+			})
+		} else {
+			c.JSON(200, jsonSlice)
+		}
 	} else {
 		c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
 	}
