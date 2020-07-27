@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go/types"
+	"golang.org/x/text/encoding/charmap"
 
 	//"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
 	"github.com/jyotishp/order-analysis/pkg/Models"
@@ -162,7 +164,7 @@ func AddOrder(c *gin.Context){
 	var orderData2 Models.Order
 	err := json.Unmarshal([]byte(content), &orderData)
 	CheckError(err,c)
-	c.BindJSON(orderData2)
+	err = json.Unmarshal(content, &orderData2)
 	Id := string(orderData2.Id)
 	fmt.Println(Id)
 	if Orders[string(Id)] == 1{
