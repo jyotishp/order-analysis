@@ -161,6 +161,7 @@ func AddOrder(c *gin.Context){
 	err := json.Unmarshal([]byte(content), &orderData)
 	CheckError(err,c)
 	Id := orderData.Id
+	fmt.Println(string(Id))
 	if Orders[string(Id)] >= 1{
 		c.JSON(200, gin.H{
 			"Error":"Order ID already there",
