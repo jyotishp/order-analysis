@@ -2,12 +2,14 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tamerh/jsparser"
 	"log"
 	"os"
 	"github.com/jyotishp/order-analysis/pkg/APIUtil"
 	"github.com/jyotishp/order-analysis/pkg/AuthUtil"
+	"github.com/jyotishp/order-analysis/pkg/Grpc_client"
 )
 
 func addAPIPaths(router *gin.Engine){
@@ -17,15 +19,15 @@ func addAPIPaths(router *gin.Engine){
 	orderAPI := router.Group("/order", gin.BasicAuth(AuthUtil.Accounts))
 
 	//restaurantAPI:=router.Group("/restaurant")
-	restaurantAPI.GET("/all", APIUtil.GetAllRestaurants)
+	restaurantAPI.GET("/all", Grpc_client.GetAllRestaurants)
 	restaurantAPI.GET("/top/:num", APIUtil.GetTopNumRestaurants)
 
 	//cuisineAPI:=router.Group("/cuisine")
-	cuisineAPI.GET("/all", APIUtil.GetAllCusines)
+	cuisineAPI.GET("/all", Grpc_client.GetAllCusines)
 	cuisineAPI.GET("/top/:num", APIUtil.GetTopNumCuisines)
 
 	//stateCuisineAPI:=router.Group("/state")
-	stateCuisineAPI.GET("/all", APIUtil.GetAllStatesCuisines)
+	stateCuisineAPI.GET("/all", Grpc_client.GetAllStatesCuisines)
 	stateCuisineAPI.GET("/top/:state/:num", APIUtil.GetTopNumStatesCuisines)
 
 	orderAPI.POST("/add",APIUtil.AddOrder)
@@ -61,6 +63,7 @@ func main() {
 			APIUtil.State_cuisine_count[state.(string)][cuisine.(string)]++
 		}
 	}
+	fmt.Println(APIUtil.Orders["2999999"])
 	router.Run(":5665")
 
 }

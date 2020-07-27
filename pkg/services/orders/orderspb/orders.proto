@@ -1,0 +1,27 @@
+syntax="proto3";
+
+package orders;
+
+option go_package="orders/orderspb";
+
+message AllRestaurantRequest {}
+message AllCuisineRequest {}
+message AllStateRequest {}
+
+message AllRestaurantResponse {
+  string allRestaurant=1;
+}
+
+message AllCuisineResponse {
+  string allCuisine=1;
+}
+
+message AllStateResponse {
+  string allState=1;
+}
+
+service OrdersService {
+  rpc GetAllRestaurant(AllRestaurantRequest) returns (AllRestaurantResponse) {}
+  rpc GetAllCuisine(AllCuisineRequest) returns (AllCuisineResponse) {}
+  rpc GetAllState(AllRestaurantRequest) returns (AllRestaurantResponse) {}
+}
