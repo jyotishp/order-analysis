@@ -162,8 +162,8 @@ func AddOrder(c *gin.Context){
 	var orderData2 Models.Order
 	err := json.Unmarshal([]byte(content), &orderData)
 	CheckError(err,c)
-	err = json.Unmarshal(content, &orderData2)
-	Id := string(orderData2.Id)
+	err = json.Unmarshal(content, &orderData)
+	Id := fmt.Sprint(orderData.Id)
 	fmt.Println(Id)
 	if Orders[string(Id)] == 1{
 		c.JSON(200, gin.H{
