@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"strings"
 
 	//"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
 	"github.com/jyotishp/order-analysis/pkg/Models"
