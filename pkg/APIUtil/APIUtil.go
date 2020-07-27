@@ -159,7 +159,7 @@ func AddOrder(c *gin.Context){
 	body:=c.Request.Body
 	content, _:= ioutil.ReadAll(body)
 	var orderData Models.Order
-	var orderData2 Models.Order
+	//var orderData2 Models.Order
 	err := json.Unmarshal([]byte(content), &orderData)
 	CheckError(err,c)
 	err = json.Unmarshal(content, &orderData)
