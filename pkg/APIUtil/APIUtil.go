@@ -161,7 +161,7 @@ func AddOrder(c *gin.Context){
 	var orderData2 Models.Order
 	err := json.Unmarshal([]byte(content), &orderData)
 	CheckError(err,c)
-	err = json.Unmarshal(content, orderData2)
+	err = json.Unmarshal(content, &orderData2)
 	CheckError(err,c)
 	Id := string(orderData2.Id)
 	fmt.Println(orderData2)
