@@ -163,7 +163,7 @@ func AddOrder(c *gin.Context){
 	CheckError(err,c)
 	err = json.Unmarshal(content, &orderData2)
 	CheckError(err,c)
-	Id := orderData2.Id
+	Id := string(orderData2.Id)
 	fmt.Println(orderData2)
 	if Orders[string(Id)] == 1{
 		c.JSON(200, gin.H{
