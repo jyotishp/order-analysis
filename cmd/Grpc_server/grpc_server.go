@@ -6,29 +6,14 @@ import (
 	"encoding/json"
 	"github.com/jyotishp/order-analysis/pkg/APIUtil"
 	"github.com/tamerh/jsparser"
-
-	//"github.com/gin-gonic/gin"
 	"github.com/shubham491/order-analysis/pkg/Models"
 	"os"
-
-	//"github.com/gin-gonic/gin"
-	//"net/http"
-
-	//"encoding/json"
 	"fmt"
-	//"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"log"
 	"net"
-
-	//"github.com/jyotishp/order-analysis/pkg/ErrorHandlers"
-	//"github.com/shubham491/order-analysis/pkg/Models"
-	//"io/ioutil"
-	//"net/http"
-	//"os"
 	"sort"
 	"strconv"
-	//"github.com/shubham491/order-analysis/pkg/AuthUtil"
 	"github.com/shubham491/order-analysis/pkg/services/orders/orderspb"
 )
 
