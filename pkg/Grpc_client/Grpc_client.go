@@ -70,17 +70,6 @@ func GetAllStatesCuisines(c *gin.Context) {
 
 		defer conn.Close();
 		oc := orderspb.NewOrdersServiceClient(conn)
-		//var res *orderspb.AllStateResponse
-		//var res1 *orderspb.AllCuisine
-		//var tempMap=make(map[string]*orderspb.AllCuisine)
-		//for k,v:= range State_cuisine_count{
-		//	res1= &orderspb.AllCuisine{
-		//		AllCuisine:v,
-		//	}
-		//
-		//	tempMap[k]=res1
-		//
-		//}
 		req := &orderspb.AllStateRequest{}
 		res, err := oc.GetAllStateCusine(c, req)
 		c.JSON(200,res.GetAllState())
@@ -157,17 +146,6 @@ func GetTopNumStateCuisines(c *gin.Context) {
 
 		defer conn.Close();
 		oc := orderspb.NewOrdersServiceClient(conn)
-		//var res *orderspb.AllStateResponse
-		//var res1 *orderspb.AllCuisine
-		//var tempMap=make(map[string]*orderspb.AllCuisine)
-		//for k,v:= range State_cuisine_count{
-		//	res1= &orderspb.AllCuisine{
-		//		AllCuisine:v,
-		//	}
-		//
-		//	tempMap[k]=res1
-		//
-		//}
 		req := &orderspb.TopNumStatesCuisinesRequest{Num:num, State: state}
 		res, err := oc.GetTopNumStatesCuisines(c, req)
 		c.JSON(200,res)
@@ -194,16 +172,6 @@ func AddOrder(c *gin.Context) {
 			log.Fatalf("Sorry client cannot talk to server: %v: ", err)
 			return
 		}
-		//var res1 *orderspb.AllCuisine
-		//var tempMap=make(map[string]*orderspb.AllCuisine)
-		//for k,v:= range State_cuisine_count{
-		//	res1= &orderspb.AllCuisine{
-		//		AllCuisine:v,
-		//	}
-		//
-		//	tempMap[k]=res1
-		//
-		//}
 		defer conn.Close();
 		oc := orderspb.NewOrdersServiceClient(conn)
 		req := &orderspb.AddOrderRequest{Order: string(content)}
