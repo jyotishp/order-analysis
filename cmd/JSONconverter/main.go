@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jyotishp/order-analysis/pkg/FileUtil"
+	"github.com/shubham491/order-analysis/pkg/FileUtil"
 	"log"
 )
 

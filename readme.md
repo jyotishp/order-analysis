@@ -47,6 +47,12 @@ go run main.go
 
 outputs.json is generated inside JSONConverter directory.
 
-place the json file inside APIHost directory.
+place the json file inside Grpc_server directory.
 
-go run mainAPIs.go to start the server at localhost:5665 and run the above mentioned APIs in browser or Postman.
+go run grpc_server.go to start the grpc server(takes around 30 seconds to start)
+
+go to new terminal instance and cd cmd/APIhost
+
+go run mainAPIs.go to start the gin server at localhost:5665 and run the above mentioned APIs in browser or Postman.
+
+

@@ -4,24 +4,67 @@ package orders;
 
 option go_package="orders/orderspb";
 
+message KV {
+string Key=1;
+int64 Value =2;
+}
+
 message AllRestaurantRequest {}
 message AllCuisineRequest {}
 message AllStateRequest {}
+message TopNumRestaurantRequest{
+  string num=1;
+}
+message TopNumCuisineRequest{
+  string num=1;
+}
+message TopNumStatesCuisinesRequest{
+  string num=1;
+  string state=2;
+}
+message AddOrderRequest{
+  string order=1;
+}
+
 
 message AllRestaurantResponse {
-  string allRestaurant=1;
+  map<string,int64> allRestaurant=1;
 }
 
 message AllCuisineResponse {
-  string allCuisine=1;
+  map<string,int64> allCuisine=1;
+}
+
+message AllCuisine{
+  map<string,int64> allCuisine=1;
 }
 
 message AllStateResponse {
-  string allState=1;
+  map<string,AllCuisine> allState=1;
+}
+
+message TopNumRestaurantResponse{
+  map<string,string>  topNumRestaurant = 1;
+}
+
+message TopNumCuisineResponse{
+  map<string,string> topNumCuisine = 1;
+}
+
+message TopNumStatesCuisinesResponse{
+  map<string,string> topNumState=1;
+}
+
+message AddOrderResponse{
+  map<string, string> response=1;
 }
 
 service OrdersService {
   rpc GetAllRestaurant(AllRestaurantRequest) returns (AllRestaurantResponse) {}
   rpc GetAllCuisine(AllCuisineRequest) returns (AllCuisineResponse) {}
-  rpc GetAllState(AllRestaurantRequest) returns (AllRestaurantResponse) {}
+  rpc GetAllStateCusine(AllStateRequest) returns (AllStateResponse) {}
+  rpc GetTopNumRestaurants(TopNumRestaurantRequest) returns (TopNumRestaurantResponse){}
+  rpc GetTopNumCuisines(TopNumCuisineRequest) returns (TopNumCuisineResponse){}
+  rpc GetTopNumStatesCuisines(TopNumStatesCuisinesRequest) returns (TopNumStatesCuisinesResponse){}
+  rpc AddOrder(AddOrderRequest) returns (AddOrderResponse){}
 }
